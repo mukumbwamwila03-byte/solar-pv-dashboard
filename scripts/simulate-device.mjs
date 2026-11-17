@@ -3,6 +3,7 @@
 //
 //   npm run simulate              upload to Supabase (settings from .env.local)
 //   npm run simulate -- --dry     print what would be sent, upload nothing
+//   npm run simulate -- --plan    run a scripted 12-minute fault demo by itself, then stop
 //
 // While it runs, press 1-8 to inject a fault (like the firmware's Serial Monitor):
 //   1 normal  2 dust  3 heavy dust  4 shading  5 diode fault  6 open circuit  7 low light  8 hot spot
@@ -232,6 +233,20 @@ await doSweep("start-up");
 await doReading();
 setInterval(doReading, READ_EVERY_MS);
 setInterval(() => doSweep("scheduled"), SWEEP_EVERY_MS);
+
+// --plan: run a scripted 12-minute demo (no key presses needed), then stop
+if (process.argv.includes("--plan")) {
+  const plan = [[3, 2], [5, 3], [7, 1], [8, 4], [9, 1], [10, 8], [11, 1]];
+  for (const [min, m] of plan) {
+    setTimeout(async () => {
+      mode = m;
+      console.log(`[plan ${min} min] Simulation mode: ${NAMES[mode]}`);
+      await doSweep("fault change");
+      await doReading();
+    }, min * 60_000);
+  }
+  setTimeout(() => { console.log("Plan finished. Stopped."); process.exit(0); }, 12 * 60_000 + 5_000);
+}
 
 if (process.stdin.isTTY) {
   process.stdin.setRawMode(true);
