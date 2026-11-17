@@ -6,3 +6,8 @@ out
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+
+# Python analysis
+analysis/data/
+analysis/output/
+__pycache__/
