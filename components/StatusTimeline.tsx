@@ -73,7 +73,9 @@ export default function StatusTimeline({ readings, start, end, withDate }: Props
         })}
       </div>
       <div className="tl-axis" aria-hidden="true">
-        {labels.map((t, k) => <span key={k}>{fmtTime(t, withDate)}</span>)}
+        {/* Times depend on the viewer's clock, so draw them only once readings have loaded in the browser
+            (the page is pre-rendered at build time; drawing them there causes a hydration mismatch) */}
+        {labels.map((t, k) => <span key={k}>{readings.length ? fmtTime(t, withDate) : " "}</span>)}
       </div>
       <p className="tl-readout" aria-live="polite">{active ?? (segments.length ? HINT : "No readings in this period.")}</p>
     </section>
