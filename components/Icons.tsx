@@ -14,11 +14,14 @@ export function StatusIcon({ level, size = 20 }: { level: Level; size?: number }
   return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 11v5.5M12 7.7v.1" /></svg>;
 }
 
-export function SunIcon() {
+// Logo: a solar cell (navy square with faint busbar grid) carrying a P-V curve that rises then flattens
+export function LogoMark({ size = 40 }: { size?: number }) {
   return (
-    <svg {...base} width={26} height={26}>
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true" className="logo-mark">
+      <rect width="40" height="40" rx="10" fill="#13203b" />
+      <path d="M13.3 0v40M26.7 0v40M0 13.3h40M0 26.7h40" stroke="#ffffff" strokeOpacity="0.14" strokeWidth="1" />
+      <path d="M7 31C12 19.5 17 13.6 23 11.6c3.6-1.2 6.6-1.4 10-1.4" fill="none" stroke="#f2b134"
+        strokeWidth="2.6" strokeLinecap="round" />
     </svg>
   );
 }

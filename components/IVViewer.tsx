@@ -31,7 +31,7 @@ export default function IVViewer({ sweeps }: Props) {
 
   if (!sweep) {
     return (
-      <section className="card iv">
+      <section className="panel iv">
         <h3>I-V curve tracer</h3>
         <div className="empty">No I-V sweeps yet. Press the button on the device or send s in the Serial Monitor.</div>
       </section>
@@ -48,7 +48,7 @@ export default function IVViewer({ sweeps }: Props) {
   ];
 
   return (
-    <section className="card iv">
+    <section className="panel iv">
       <div className="section-head">
         <div>
           <h3>I-V curve tracer</h3>
@@ -75,7 +75,7 @@ export default function IVViewer({ sweeps }: Props) {
         <div className="iv-detail">
           <p className="iv-title">
             <span className="lvl" data-level={info.level}><StatusIcon level={info.level} size={16} /></span>
-            Sweep at {fmtTime(Date.parse(sweep.created_at), true)} · {info.label}
+            Sweep at {fmtTime(Date.parse(sweep.created_at), true)}, {info.label.toLowerCase()}
           </p>
           {error && <div className="empty">Could not load curve: {error}</div>}
           <div className="iv-charts">
@@ -120,16 +120,16 @@ function CurveChart({ title, data, y, unit, dec, mpp }: CurveProps) {
                 const d = payload[0].payload as { v: number; i: number; p: number };
                 return (
                   <div className="tooltip">
-                    <div>{d.v.toFixed(2)} V · {d.i.toFixed(3)} A</div>
+                    <div>{d.v.toFixed(2)} V at {d.i.toFixed(3)} A</div>
                     <div><strong>{d.p.toFixed(2)}</strong> W</div>
                   </div>
                 );
               }} />
-            <Line type="monotone" dataKey={y} stroke="var(--s1)" strokeWidth={2} dot={false}
-              activeDot={{ r: 4, stroke: "var(--surface)", strokeWidth: 2 }} isAnimationActive={false} />
+            <Line type="monotone" dataKey={y} stroke="var(--cell)" strokeWidth={2} dot={false}
+              activeDot={{ r: 4, stroke: "var(--glass)", strokeWidth: 2 }} isAnimationActive={false} />
             {mpp && (
-              <ReferenceDot x={mpp.x} y={mpp.y} r={5} fill="var(--ink)" stroke="var(--surface)" strokeWidth={2}
-                label={{ value: `MPP ${mpp.y.toFixed(dec)} ${unit}`, position: "top", fill: "var(--ink2)", fontSize: 11 }} />
+              <ReferenceDot x={mpp.x} y={mpp.y} r={5} fill="var(--ink)" stroke="var(--glass)" strokeWidth={2}
+                label={{ value: `Maximum ${mpp.y.toFixed(dec)} ${unit}`, position: "top", fill: "var(--ink-2)", fontSize: 11 }} />
             )}
           </LineChart>
         </ResponsiveContainer>

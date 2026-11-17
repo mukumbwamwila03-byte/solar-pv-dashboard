@@ -67,12 +67,26 @@ function ivPoints(G: number, T: number, dust: number, shadeSub1: number): [numbe
     return Math.max(-0.6, voc + 0.6 * Math.log(1 - I / isc));
   };
   const iMax = Math.max(subIsc(0), subIsc(1));
+  const panelV = (I: number) => subV(I, subIsc(0)) + subV(I, subIsc(1));
+  // Current at a given voltage: V falls as I rises, so bisection works
+  const currentAt = (V: number) => {
+    let lo = 0, hi = iMax;
+    for (let k = 0; k < 50; k++) {
+      const mid = (lo + hi) / 2;
+      if (panelV(mid) > V) lo = mid; else hi = mid;
+    }
+    return lo;
+  };
+  // Sample by voltage, 0 V to Voc, like the device and scripts/simulate-device.mjs
+  const voc = panelV(0);
   const pts: [number, number][] = [];
-  for (let k = 0; k <= 160; k++) {
-    const I = iMax * (1 - k / 160);
-    const V = subV(I, subIsc(0)) + subV(I, subIsc(1));
-    if (V < 0) continue;
-    pts.push([+Math.max(0, V + noise(0.02)).toFixed(3), +Math.max(0, I + noise(0.002)).toFixed(4)]);
+  if (voc > 0) {
+    const N = 120;
+    for (let k = 0; k <= N; k++) {
+      const V = (voc * k) / N;
+      const I = k === N ? 0 : currentAt(V);
+      pts.push([+Math.max(0, V + noise(0.02)).toFixed(3), +Math.max(0, I + noise(0.002)).toFixed(4)]);
+    }
   }
   return pts.sort((a, b) => a[0] - b[0]);
 }

@@ -16,6 +16,7 @@ type Props = {
   start: number;
   end: number;
   withDate: boolean;
+  color?: string;
   thresholds?: Threshold[];
   domain?: [number | "auto", number | "auto"];
   ticks?: number[];
@@ -23,8 +24,9 @@ type Props = {
 
 export default function TrendChart(p: Props) {
   const hasData = p.data.some((d) => d[p.field] !== null && d[p.field] !== undefined);
+  const color = p.color ?? "var(--cell)";
   return (
-    <figure className="card chart">
+    <figure className="panel chart">
       <figcaption>
         <h3>{p.title}</h3>
         <p className="muted">{p.subtitle}</p>
@@ -56,8 +58,8 @@ export default function TrendChart(p: Props) {
                 );
               }}
             />
-            <Line type="monotone" dataKey={p.field} stroke="var(--s1)" strokeWidth={2} dot={false}
-              activeDot={{ r: 4, stroke: "var(--surface)", strokeWidth: 2 }} isAnimationActive={false} connectNulls={false} />
+            <Line type="monotone" dataKey={p.field} stroke={color} strokeWidth={2} dot={false}
+              activeDot={{ r: 4, stroke: "var(--glass)", strokeWidth: 2 }} isAnimationActive={false} connectNulls={false} />
           </LineChart>
         </ResponsiveContainer>
       )}
